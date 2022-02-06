@@ -6,10 +6,7 @@ __pycache__/evaluate.cpython-38.pyc
 __pycache__/evaluating.cpython-38.pyc
 __pycache__/operate_bilstm.cpython-38.pyc
 __pycache__/utils.cpython-38.pyc
-ckpts/bilstm_crf.pkl
-ckpts/bilstm.pkl
-ckpts/crf.pkl
-ckpts/hmm.pkl
+ckpts/*
 models/__pycache__/__init__.cpython-38.pyc
 models/__pycache__/BILSTM_CRF.cpython-38.pyc
 models/__pycache__/BILSTM.cpython-38.pyc
@@ -37,3 +34,5 @@ ckpts/bert/cache/474091b74bcac79a97bc6b608b85aacbdfc88e851c7a458080137174cb9cd8f
 ckpts/bert/cache/e79c13b25855831e651f40145fb489ac88f4f0fb62aab6d1a83368f474801995.e557b4ab49547b30afeb72614f872a5b107eaf0945de5829c7b7bdfd9bfc1a42
 ckpts/bert/cache/e79c13b25855831e651f40145fb489ac88f4f0fb62aab6d1a83368f474801995.e557b4ab49547b30afeb72614f872a5b107eaf0945de5829c7b7bdfd9bfc1a42.json
 ckpts/bert/cache/e79c13b25855831e651f40145fb489ac88f4f0fb62aab6d1a83368f474801995.e557b4ab49547b30afeb72614f872a5b107eaf0945de5829c7b7bdfd9bfc1a42.lock
+data/cached_train_bert_256
+runs/*
