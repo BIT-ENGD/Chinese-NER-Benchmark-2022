@@ -3,10 +3,12 @@ from evaluate import hmm_train_eval,crf_train_eval,bilstm_train_and_eval, ensemb
 from utils import extend_maps,prepocess_data_for_lstmcrf
 import os
 
+
 DATASET={"MSRA":["train_dev.char.bmes","train_dev.char.bmes","test.char.bmes"],
         "People_Daily":["example.train","example.dev","example.test"],
         "ResumeNER":["train.char.bmes","dev.char.bmes","test.char.bmes"],
-        "WeiboNER":["train.all.bmes","dev.all.bmes","test.all.bmes"]
+        "WeiboNER":["train.all.bmes","dev.all.bmes","test.all.bmes"],
+        "CLUE2020":["train.char","test.char","test.char"],
 }
 
 
