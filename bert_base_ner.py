@@ -49,6 +49,7 @@ from transformers import (
     XLMRobertaForTokenClassification,
     XLMRobertaTokenizer,
     get_linear_schedule_with_warmup,
+    
 )
 from bert_utils import convert_examples_to_features, get_labels, read_examples_from_file
 
@@ -58,9 +59,27 @@ try:
 except ImportError:
     from tensorboardX import SummaryWriter
 
+DATASET={"MSRA":["train_dev.char.bmes","train_dev.char.bmes","test.char.bmes"],
+        "People_Daily":["example.train","example.dev","example.test"],
+        "ResumeNER":["train.char.bmes","dev.char.bmes","test.char.bmes"],
+        "WeiboNER":["train.all.bmes","dev.all.bmes","test.all.bmes"]
+}
+
+
+TRAIN_SET=0
+DEV_SET=1
+TEST_SET=2
+
+DATASET_NAME="ResumeNER"
+
+def get_dataset_path(datapath,dataset,type):
+        return os.path.join(dataset,DATASET[dataset][type])
+
+def get_dataset_dir(datapath,dataset):
+        return os.path.join(datapath,dataset)
 
 logger = logging.getLogger(__name__)
-
+'''
 ALL_MODELS = sum(
     (
         tuple(conf.pretrained_config_archive_map.keys())
@@ -68,7 +87,7 @@ ALL_MODELS = sum(
     ),
     (),
 )
-
+'''
 MODEL_CLASSES = {
     "bert": (BertConfig, BertForTokenClassification, BertTokenizer),
     "roberta": (RobertaConfig, RobertaForTokenClassification, RobertaTokenizer),
@@ -251,6 +270,7 @@ def train(args, train_dataset, model, tokenizer, labels, pad_token_label_id):
 
 
 def evaluate(args, model, tokenizer, labels, pad_token_label_id, mode, prefix=""):
+
     eval_dataset = load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode=mode)
 
     args.eval_batch_size = args.per_gpu_eval_batch_size * max(1, args.n_gpu)
@@ -325,11 +345,11 @@ def evaluate(args, model, tokenizer, labels, pad_token_label_id, mode, prefix=""
     return results, preds_list
 
 
-def load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode):
+def load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode, file_path):
     if args.local_rank not in [-1, 0] and not evaluate:
         torch.distributed.barrier()  # Make sure only the first process in distributed training process the dataset, and the others will use the cache
 
-    # Load data features from cache or dataset file
+     # Load data features from cache or dataset file
     cached_features_file = os.path.join(
         args.data_dir,
         "cached_{}_{}_{}".format(
@@ -341,7 +361,7 @@ def load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode):
         features = torch.load(cached_features_file)
     else:
         logger.info("Creating features from dataset file at %s", args.data_dir)
-        examples = read_examples_from_file(args.data_dir, mode)
+        examples = read_examples_from_file(file_path,mode)
         features = convert_examples_to_features(
             examples,
             labels,
@@ -391,6 +411,13 @@ def main():
         help="The input data dir. Should contain the training files for the CoNLL-2003 NER task.",
     )
     parser.add_argument(
+        "--data_set",
+        default='MSRA',
+        type=str,
+        required=False,
+        help="The input data dir. Should contain the training files for the CoNLL-2003 NER task.",
+    )
+    parser.add_argument(
         "--model_type",
         default='bert',
         type=str,
@@ -399,10 +426,10 @@ def main():
     )
     parser.add_argument(
         "--model_name_or_path",
-        default='D:\\NLP\\my-wholes-models\\chinese_wwm_pytorch',
+        default='hfl/chinese-bert-wwm',
         type=str,
         required=False,
-        help="Path to pre-trained model or shortcut name selected in the list: " + ", ".join(ALL_MODELS),
+        help="Path to pre-trained model or shortcut name selected in the list: ",
     )
     parser.add_argument(
         "--output_dir",
@@ -415,7 +442,7 @@ def main():
     # Other parameters
     parser.add_argument(
         "--labels",
-        default="./data/lables.char",
+        default="labels.char",
         type=str,
         help="Path to a file containing all labels. If not specified, CoNLL-2003 labels are used.",
     )
@@ -488,7 +515,7 @@ def main():
     )
     parser.add_argument("--no_cuda", action="store_true", help="Avoid using CUDA when available")
     parser.add_argument(
-        "--overwrite_output_dir", action="store_true", help="Overwrite the content of the output directory"
+        "--overwrite_output_dir", action="store_true", default=True, help="Overwrite the content of the output directory"
     )
     parser.add_argument(
         "--overwrite_cache", action="store_true", help="Overwrite the cached training and evaluation sets"
@@ -511,7 +538,6 @@ def main():
     parser.add_argument("--server_ip", type=str, default="", help="For distant debugging.")
     parser.add_argument("--server_port", type=str, default="", help="For distant debugging.")
     args = parser.parse_args()
-
     if (
         os.path.exists(args.output_dir)
         and os.listdir(args.output_dir)
@@ -562,7 +588,8 @@ def main():
     # Set seed
     set_seed(args)
 
-    labels = get_labels(args.labels)
+    label_path=os.path.join(get_dataset_dir(args.data_dir,args.data_set),args.labels)
+    labels = get_labels(label_path)
     num_labels = len(labels)
     # 交叉熵损失函数忽略计算的-100做为label id的pad token，计算损失时不计入
     pad_token_label_id = CrossEntropyLoss().ignore_index
@@ -599,7 +626,9 @@ def main():
 
     # Training
     if args.do_train:
-        train_dataset = load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode="train")
+        dat_path= get_dataset_path(args.data_dir,args.data_set,TRAIN_SET)
+        dat_path= os.path.join(args.data_dir,dat_path)
+        train_dataset = load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode="train", file_path=dat_path)
         global_step, tr_loss = train(args, train_dataset, model, tokenizer, labels, pad_token_label_id)
         logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
 

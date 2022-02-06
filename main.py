@@ -14,7 +14,7 @@ TRAIN_SET=0
 DEV_SET=1
 TEST_SET=2
 
-DATASET_NAME="MSRA"
+DATASET_NAME="ResumeNER"
 
 def get_dataset_path(dataset,type):
         return os.path.join(dataset,DATASET[dataset][type])
