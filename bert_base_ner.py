@@ -270,8 +270,10 @@ def train(args, train_dataset, model, tokenizer, labels, pad_token_label_id):
 
 
 def evaluate(args, model, tokenizer, labels, pad_token_label_id, mode, prefix=""):
-
-    eval_dataset = load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode=mode)
+    
+    dat_path= get_dataset_path(args.data_dir,args.data_set,DEV_SET)
+    dat_path= os.path.join(args.data_dir,dat_path)
+    eval_dataset = load_and_cache_examples(args, tokenizer, labels, pad_token_label_id, mode=mode,file_path=dat_path)
 
     args.eval_batch_size = args.per_gpu_eval_batch_size * max(1, args.n_gpu)
     # Note that DistributedSampler samples randomly
