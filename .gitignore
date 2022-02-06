@@ -1,0 +1,17 @@
+result.txt
+.vscode/launch.json
+__pycache__/config.cpython-38.pyc
+__pycache__/data.cpython-38.pyc
+__pycache__/evaluate.cpython-38.pyc
+__pycache__/evaluating.cpython-38.pyc
+__pycache__/operate_bilstm.cpython-38.pyc
+__pycache__/utils.cpython-38.pyc
+ckpts/bilstm_crf.pkl
+ckpts/bilstm.pkl
+ckpts/crf.pkl
+ckpts/hmm.pkl
+models/__pycache__/__init__.cpython-38.pyc
+models/__pycache__/BILSTM_CRF.cpython-38.pyc
+models/__pycache__/BILSTM.cpython-38.pyc
+models/__pycache__/CRF.cpython-38.pyc
+models/__pycache__/HMM.cpython-38.pyc
