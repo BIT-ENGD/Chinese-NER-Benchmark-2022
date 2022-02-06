@@ -1,15 +1,31 @@
 from data import build_corpus
 from evaluate import hmm_train_eval,crf_train_eval,bilstm_train_and_eval, ensemble_evaluate
 from utils import extend_maps,prepocess_data_for_lstmcrf
+import os
 
+DATASET={"MSRA":["train_dev.char.bmes","train_dev.char.bmes","test.char.bmes"],
+        "People_Daily":["example.train","example.dev","example.test"],
+        "ResumeNER":["train.char.bmes","dev.char.bmes","test.char.bmes"],
+        "WeiboNER":["train.all.bmes","dev.all.bmes","test.all.bmes"]
+}
+
+
+TRAIN_SET=0
+DEV_SET=1
+TEST_SET=2
+
+DATASET_NAME="MSRA"
+
+def get_dataset_path(dataset,type):
+        return os.path.join(dataset,DATASET[dataset][type])
 def main():
     """模型训练与评估"""
 
     # 读取数据
     print("读取数据中...")
-    train_word_lists,train_tag_lists,word2id,tag2id = build_corpus("train")
-    dev_word_lists,dev_tag_lists = build_corpus("dev",make_vocab=False)
-    test_word_lists,test_tag_lists = build_corpus("test",make_vocab=False)
+    train_word_lists,train_tag_lists,word2id,tag2id = build_corpus(get_dataset_path(DATASET_NAME,TRAIN_SET))
+    dev_word_lists,dev_tag_lists = build_corpus(get_dataset_path(DATASET_NAME,DEV_SET),make_vocab=False)
+    test_word_lists,test_tag_lists = build_corpus(get_dataset_path(DATASET_NAME,TEST_SET),make_vocab=False)
 
     #训练并评估hmm模型
     print("正在训练评估HMM模型")
