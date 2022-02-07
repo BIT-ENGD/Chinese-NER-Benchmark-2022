@@ -1,9 +1,5 @@
 import os
-dataset={"MSRA":["train_dev.char.bmes","train_dev.char.bmes","test.char.bmes"],
-        "People_Daily":["example.train","example.dev","example.test"],
-        "ResumeNER":["train.char.bmes","dev.char.bmes","test.char.bmes"],
-        "WeiboNER":["train.all.bmes","dev.all.bmes","test.all.bmes"]
-}
+from dataset import *
 
 data_path="data"
 label_file="labels.char"
@@ -11,10 +7,10 @@ label_file="labels.char"
 
 
 
-for dn in dataset:
+for dn in DATASET:
     label_path=os.path.join(data_path,dn,label_file)
     alltags=set()
-    for fn in dataset[dn]:
+    for fn in DATASET[dn]:
      
         fullname=os.path.join(data_path,dn,fn)
         with open(fullname,"r") as f:
