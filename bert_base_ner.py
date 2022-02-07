@@ -436,7 +436,7 @@ def main():
     # Other parameters
     parser.add_argument(
         "--labels",
-        default="labels.char",
+        default=LABEL_FILE_NAME,
         type=str,
         help="Path to a file containing all labels. If not specified, CoNLL-2003 labels are used.",
     )
