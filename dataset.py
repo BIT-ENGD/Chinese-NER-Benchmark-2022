@@ -9,3 +9,5 @@ DATASET={"MSRA":["train_dev.char.bmes","train_dev.char.bmes","test.char.bmes"],
 TRAIN_SET=0
 DEV_SET=1
 TEST_SET=2
+
+LABEL_FILE_NAME="labels.char"

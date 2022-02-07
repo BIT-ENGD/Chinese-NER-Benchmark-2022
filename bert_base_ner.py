@@ -62,7 +62,7 @@ except ImportError:
 
 from dataset import *
 
-DATASET_NAME="MSRA"
+DATASET_NAME="THUCNEWS"
 
 def get_dataset_path(datapath,dataset,type):
         return os.path.join(dataset,DATASET[dataset][type])
