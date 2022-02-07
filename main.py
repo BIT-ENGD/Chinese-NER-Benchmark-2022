@@ -7,7 +7,7 @@ import os
 
 from dataset import *
 
-DATASET_NAME="ResumeNER"
+DATASET_NAME="THUCNEWS"
 
 def get_dataset_path(dataset,type):
         return os.path.join(dataset,DATASET[dataset][type])

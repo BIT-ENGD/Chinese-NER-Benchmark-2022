@@ -17,7 +17,8 @@ def build_corpus(datasetpath,make_vocab=True,data_dir="./data"):
         word_list = []
         tag_list = []
         for line in f:
-            if line != '\n':
+            line=line.strip()
+            if line != '\n' and line != "":
                 word,tag = line.strip('\n').split()
                 word_list.append(word)
                 tag_list.append(tag)
