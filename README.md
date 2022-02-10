@@ -11,7 +11,7 @@ huggingface提供的transformers实现，预训练模型使用哈工大讯飞开
 
 ## 数据集
 
-### THUCNEWS   来自clue2020测试套件，数据源自清华文本分类数据集
+### CLUENER2020   来自clue2020测试套件，数据源自清华文本分类数据集
 
 ### MSRA
 
